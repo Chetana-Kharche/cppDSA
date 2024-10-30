@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+#define MAX 100  // Maximum size for the stack and array
+
+// Stack class to help with reversing the array
+class Stack {
+    int top;           // Variable to keep track of the top of the stack
+    char arr[MAX];     // Array to hold the stack elements (characters)
+
+public:
+    // Constructor to initialize the stack
+    Stack() {
+        top = -1;  // Start with an empty stack, so top is set to -1
+    }
+
+    // Function to add (push) a character onto the stack
+    void push(char c) {
+        if (top == MAX - 1) {  // Check if the stack is full
+            cout << "Stack is full" << endl;
+        } else {
+            arr[++top] = c;  // Increment top and place the character in the stack
+        }
+    }
+
+    // Function to remove (pop) a character from the stack
+    char pop() {
+        if (top == -1) {  // Check if the stack is empty
+            cout << "Stack is empty" << endl;
+            return '\0';  // Return null character if empty
+        } else {
+            return arr[top--];  // Return the top character and decrement top
+        }
+    }
+
+    // Function to check if the stack is empty
+    bool isEmpty() {
+        return top == -1;  // Stack is empty if top is -1
+    }
+};
+
+// Function to reverse an array of characters using the Stack class
+void reverseArray(char array[], int size) {
+    Stack stack;  // Create a stack to hold characters
+
+    // Step 1: Push all elements of the array onto the stack
+    for (int i = 0; i < size; i++) {
+        stack.push(array[i]);  // Add each character to the stack
+    }
+
+    // Step 2: Pop all elements from the stack back into the array
+    for (int i = 0; i < size; i++) {
+        array[i] = stack.pop();  // Take each character from the stack (in reverse order)
+    }
+}
+
+int main() {
+    char array[MAX];  // Array to store the characters
+    int size;         // Variable to store the size of the array
+
+    // Get the size of the array from the user
+    cout << "Enter the size of the array (max 100): ";
+    cin >> size;
+
+    // Check if size is within the allowed range
+    if (size > MAX) {
+        cout << "Size exceeds the maximum limit." << endl;
+        return 1;  // Exit the program if size is too large
+    }
+
+    // Get the array elements from the user
+    cout << "Enter elements of the array:" << endl;
+    for (int i = 0; i < size; i++) {
+        cin >> array[i];  // Read each character into the array
+    }
+
+    // Call the reverseArray function to reverse the array
+    reverseArray(array, size);
+
+    // Display the reversed array
+    cout << "Reversed array: ";
+    for (int i = 0; i < size; i++) {
+        cout << array[i] << " ";  // Print each character
+    }
+    cout << endl;
+
+    return 0;  // End of the program
+}
