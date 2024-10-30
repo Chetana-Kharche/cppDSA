@@ -1,0 +1,149 @@
+#include <iostream>
+using namespace std;
+
+// Define a maximum size for the stack and queue
+#define MAX_SIZE 100  
+
+// Class for implementing a Queue
+class Queue {
+private:
+    int front;  // Points to the first element
+    int rear;   // Points to the last element
+    int elements[MAX_SIZE];  // Array to store queue elements
+
+public:
+    // Constructor initializes the queue
+    Queue() {
+        front = -1;  // Queue starts empty
+        rear = -1;
+    }
+
+    // Method to add an element to the queue
+    void enqueue(int value) {
+        // Check if the queue is full
+        if (rear == MAX_SIZE - 1) {
+            cout << "Queue is full. Can't add more elements." << endl;
+        } else {
+            // If the queue was empty, set front to the first element
+            if (front == -1) {
+                front = 0;  
+            }
+            // Add the value at the end of the queue
+            elements[++rear] = value;  
+        }
+    }
+
+    // Method to remove and return the front element of the queue
+    int dequeue() {
+        // Check if the queue is empty
+        if (front == -1 || front > rear) {
+            cout << "Queue is empty. No elements to remove." << endl;
+            return -1;  // Indicate that the queue is empty
+        } else {
+            return elements[front++];  // Return the front element and move front up
+        }
+    }
+
+    // Check if the queue is empty
+    bool isEmpty() {
+        return front == -1 || front > rear;  // True if empty
+    }
+};
+
+// Class for implementing a Stack
+class Stack {
+private:
+    int top;  // Points to the top element
+    int elements[MAX_SIZE];  // Array to store stack elements
+
+public:
+    // Constructor initializes the stack
+    Stack() {
+        top = -1;  // Stack starts empty
+    }
+
+    // Method to add an element to the stack
+    void push(int value) {
+        // Check if the stack is full
+        if (top == MAX_SIZE - 1) {
+            cout << "Stack is full. Can't add more elements." << endl;
+        } else {
+            elements[++top] = value;  // Add value to the top of the stack
+        }
+    }
+
+    // Method to remove and return the top element of the stack
+    int pop() {
+        // Check if the stack is empty
+        if (top == -1) {
+            cout << "Stack is empty. No elements to remove." << endl;
+            return -1;  // Indicate that the stack is empty
+        } else {
+            return elements[top--];  // Return the top element and decrease top
+        }
+    }
+
+    // Check if the stack is empty
+    bool isEmpty() {
+        return top == -1;  // True if empty
+    }
+
+    // Display current stack elements
+    void display() {
+        cout << "Current stack elements: ";
+        for (int i = 0; i <= top; i++) {
+            cout << elements[i] << " ";  // Print each element
+        }
+        cout << endl;
+    }
+};
+
+// Function to reverse the stack using a queue
+void reverseStack(Stack &stack) {
+    Queue queue;  // Create a new queue to help with reversal
+
+    // Step 1: Move all elements from the stack to the queue
+    while (!stack.isEmpty()) {
+        queue.enqueue(stack.pop());  // Pop from stack and add to queue
+    }
+
+    // Step 2: Move all elements back from the queue to the stack
+    while (!queue.isEmpty()) {
+        stack.push(queue.dequeue());  // Remove from queue and add to stack
+    }
+}
+
+int main() {
+    Stack myStack;  // Create a stack to hold user input
+    int size;
+
+    cout << "How many elements do you want to add to the stack? (max " << MAX_SIZE << "): ";
+    cin >> size;
+
+    // Ensure the size is within acceptable limits
+    if (size <= 0 || size > MAX_SIZE) {
+        cout << "Invalid size. Please enter a number between 1 and " << MAX_SIZE << "." << endl;
+        return 1;  // Exit if size is invalid
+    }
+
+    // Use a loop to get elements from the user
+    for (int i = 0; i < size; i++) {
+        int value;
+        cout << "Enter element " << (i + 1) << ": ";
+        cin >> value;  // Read user input
+        myStack.push(value);  // Push the input value onto the stack
+    }
+
+    // Show the original stack before reversing
+    cout << "Original stack: ";
+    myStack.display();
+
+    // Call the function to reverse the stack
+    reverseStack(myStack);
+
+    // Show the reversed stack
+    cout << "Reversed stack: ";
+    myStack.display();
+
+    return 0;  // End of the program
+}
