@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define MAX 100
+class Stack {
+    int top;
+    char arr[MAX];
+    
+public:
+    Stack() {
+        top = -1;  // Correct initialization
+    }
+
+    void push(char c) {
+        if (top == MAX - 1) {
+            cout << "Stack is full" << endl;
+        } else {
+            arr[++top] = c;
+        }
+    }
+
+    char pop() {
+        if (top == -1) {
+            cout << "Stack is empty" << endl;
+            return '\0';  // Return null character if stack is empty
+        } else {
+            return arr[top--];  // Return and decrement top
+        }
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+string midddle(string s){
+   Stack stack;
+   int len=s.length();
+   int mid=s.length()/2;
+   for(int i=0;i<mid;i++){
+       stack.push(s[i]);
+   }
+   if (len % 2 != 0) {
+        mid++;  // Move to the next index to skip the middle character
+    }
+
+    // Append the second half of the string to the result
+    string result = "";  
+    for (int i = mid; i < len; i++) {
+        result += s[i];  // Add remaining characters to the result
+    }
+
+    // Pop the characters from the stack and add them to the result
+    while (!stack.isEmpty()) {
+        result = stack.pop() + result;  // Prepend characters from the stack
+    }
+
+    return result;
+}
+
+int main() {
+    string s;
+    cout << "Enter the string: ";
+    cin >> s;   //if string is of single word you can directly use cin
+    //getline(cin, s);  // Use getline to read multiple words
+    string reversed = midddle(s);
+    cout << "Reversed string: " << reversed << endl;
+    return 0;
+}
