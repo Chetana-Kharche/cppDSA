@@ -1,0 +1,86 @@
+#include <iostream>
+using namespace std;
+
+void nextGreaterElement(int arr[], int n) {
+    int result[n]; // Array to store the result
+    int stack[n]; // Stack to store indices
+    int top = -1; // Initialize stack pointer
+
+    // Step 1: Traverse the array
+    for (int i = 0; i < n; i++) {
+        // Step 2: Check for next greater element
+        while (top != -1 && arr[stack[top]] < arr[i]) {
+            // Pop from the stack and assign the result
+            result[stack[top]] = arr[i]; // Current element is the next greater
+            top--; // Decrease the stack size
+        }
+
+        // Step 3: Push current index onto the stack
+        stack[++top] = i; // Increment the top pointer and push current index
+    }
+
+    // Step 4: Handle remaining elements in the stack
+    while (top != -1) {
+        result[stack[top]] = -1; // No greater element found
+        top--;
+    }
+
+    // Step 5: Print the results
+    cout << "Next greater elements: ";
+    for (int i = 0; i < n; i++) {
+        cout << result[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int arr[] = {4, 5, 2, 10, 8};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    nextGreaterElement(arr, n);
+
+    return 0;
+}
+/*
+Step-by-Step Explanation
+Initialize Variables:
+
+Input Array: arr = [4, 5, 2, 10, 8]
+Result Array: result = [-1, -1, -1, -1, -1] (initially all set to -1)
+Stack: stack = [] (to hold indices of the array elements)
+Top: top = -1 (pointer to the top of the stack)
+Iterate through the Array: We will iterate through each element in the array, using its index i.
+
+Iteration 1 (i = 0, arr[i] = 4):
+Stack is empty, so we push the index 0 onto the stack.
+Stack: stack = [0]
+Iteration 2 (i = 1, arr[i] = 5):
+The current element 5 is greater than the element at the index on the top of the stack (which is arr[0] = 4).
+We pop the index 0 from the stack and set result[0] to 5 (the current element).
+Result: result = [5, -1, -1, -1, -1]
+Now, we push the current index 1 onto the stack.
+Stack: stack = [1]
+Iteration 3 (i = 2, arr[i] = 2):
+The current element 2 is not greater than 5 (the element at the index on the top of the stack).
+We simply push the current index 2 onto the stack.
+Stack: stack = [1, 2]
+Iteration 4 (i = 3, arr[i] = 10):
+The current element 10 is greater than arr[2] = 2, so we pop 2 from the stack and set result[2] to 10.
+Result: result = [5, -1, 10, -1, -1]
+Next, 10 is also greater than arr[1] = 5, so we pop 1 from the stack and set result[1] to 10.
+Result: result = [5, 10, 10, -1, -1]
+Now, we push the current index 3 onto the stack.
+Stack: stack = [3]
+Iteration 5 (i = 4, arr[i] = 8):
+The current element 8 is not greater than arr[3] = 10, so we push the current index 4 onto the stack.
+Stack: stack = [3, 4]
+Handle Remaining Elements: After iterating through all elements, we check the stack. The indices 3 and 4 remain in the stack, which means 10 and 8 do not have a next greater element.
+
+We set result[3] to -1 (remains -1 as initialized).
+We set result[4] to -1 (remains -1 as initialized).
+Final Result: The final result array contains the next greater elements for each index:
+
+css
+Copy code
+result = [5, 10, 10, -1, -1]
+*/
