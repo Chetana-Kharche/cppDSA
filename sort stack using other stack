@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+class Stack {
+    int* arr;
+    int topIndex;
+    int capacity;
+
+public:
+    Stack(int size) {
+        capacity = size;
+        arr = new int[capacity];
+        topIndex = -1;
+    }
+
+    ~Stack() {
+        delete[] arr;
+    }
+
+    bool isEmpty() {
+        return topIndex == -1;
+    }
+
+    bool isFull() {
+        return topIndex == capacity - 1;
+    }
+
+    void push(int data) {
+        if (isFull()) {
+            cout << "Stack overflow\n";
+            return;
+        }
+        arr[++topIndex] = data;
+    }
+
+    int pop() {
+        if (isEmpty()) {
+            cout << "Stack underflow\n";
+            return -1;  // Returning -1 as an error value; assume no -1 in input
+        }
+        return arr[topIndex--];
+    }
+
+    int top() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return arr[topIndex];
+    }
+};
+
+void sortStack(Stack& stack, int size) {
+    Stack sortedStack(size);  // Auxiliary stack for sorting
+
+    while (!stack.isEmpty()) {
+        // Step 1: Pop the top element from the original stack
+        int temp = stack.pop();
+
+        // Step 2: Move elements from sortedStack back to stack if they are greater than temp
+        while (!sortedStack.isEmpty() && sortedStack.top() > temp) {
+            stack.push(sortedStack.pop());
+        }
+
+        // Step 3: Push temp into the sortedStack
+        sortedStack.push(temp);
+    }
+
+    // Move sorted elements back to the original stack
+    while (!sortedStack.isEmpty()) {
+        stack.push(sortedStack.pop());
+    }
+}
+
+void printStack(Stack& stack) {
+    Stack tempStack(stack);  // Make a copy to print without modifying original
+    while (!tempStack.isEmpty()) {
+        cout << tempStack.pop() << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int size = 6;
+    Stack stack(size);
+
+    // Pushing elements onto stack
+    stack.push(34);
+    stack.push(3);
+    stack.push(31);
+    stack.push(98);
+    stack.push(92);
+    stack.push(23);
+
+    cout << "Original Stack: ";
+    printStack(stack);
+
+    // Sort the stack
+    sortStack(stack, size);
+
+    cout << "Sorted Stack: ";
+    printStack(stack);
+
+    return 0;
+}
+/*
+Sorting Process
+Pop 34 from stack:
+
+Temp = 34
+Since sortedStack is empty, we push 34 into sortedStack.
+stack: 23 92 98 31 3
+sortedStack: 34
+Pop 3 from stack:
+
+Temp = 3
+Compare 3 with the top of sortedStack (34). Since 3 < 34, we move 34 from sortedStack back to stack to find the correct position for 3.
+Push 3 into sortedStack.
+stack: 23 92 98 31 34
+sortedStack: 3
+Pop 34 from stack:
+
+Temp = 34
+Compare 34 with 3 (top of sortedStack). Since 34 > 3, push 34 onto sortedStack.
+stack: 23 92 98 31
+sortedStack: 3 34
+Pop 31 from stack:
+
+Temp = 31
+Compare 31 with 34. Since 31 < 34, move 34 from sortedStack back to stack.
+Compare 31 with 3 (top of sortedStack). Since 31 > 3, push 31 onto sortedStack.
+stack: 23 92 98 34
+sortedStack: 3 31
+Pop 98 from stack:
+
+Temp = 98
+Compare 98 with 31 (top of sortedStack). Since 98 > 31, push 98 onto sortedStack.
+stack: 23 92
+sortedStack: 3 31 34 98
+Pop 92 from stack:
+
+Temp = 92
+Compare 92 with 98. Since 92 < 98, move 98 back to stack.
+Compare 92 with 34. Since 92 > 34, push 92 onto sortedStack.
+stack: 23 98
+sortedStack: 3 31 34 92
+Pop 98 from stack:
+
+Temp = 98
+Compare 98 with 92. Since 98 > 92, push 98 onto sortedStack.
+stack: 23
+sortedStack: 3 31 34 92 98
+Pop 23 from stack:
+
+Temp = 23
+Move all elements from sortedStack back to stack until we find the correct position for 23:
+Move 98, 92, 34, and 31 back to stack.
+Push 23 onto sortedStack.
+stack: 98 92 34 31
+sortedStack: 3 23
+Push Elements Back to sortedStack:
+
+Now, push the remaining elements in stack (31, 34, 92, and 98) back to sortedStack.
+stack: empty
+sortedStack: 3 23 31 34 92 98
+*/
