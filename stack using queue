@@ -1,0 +1,168 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+    int front;
+    int rear;
+    int size;
+    int* arr;
+
+public:
+    Queue(int capacity) {
+        front = 0;
+        rear = 0;
+        size = capacity;
+        arr = new int[size];
+    }
+
+    ~Queue() {
+        delete[] arr;
+    }
+
+    bool isEmpty() {
+        return front == rear;
+    }
+
+    bool isFull() {
+        return rear == size;
+    }
+
+    void enqueue(int data) {
+        if (isFull()) {
+            cout << "Queue is full\n";
+            return;
+        }
+        arr[rear++] = data;  // Add data at rear and increment rear
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        int data = arr[front];
+        // Shift elements to the left
+        for (int i = 0; i < rear - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
+        rear--;  // Decrease rear after shifting
+        return data;
+    }
+
+    int getFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+};
+
+class StackUsingQueues {
+    Queue* q1;
+    Queue* q2;
+
+public:
+    StackUsingQueues(int capacity) {
+        q1 = new Queue(capacity);
+        q2 = new Queue(capacity);
+    }
+
+    ~StackUsingQueues() {
+        delete q1;
+        delete q2;
+    }
+
+    void push(int data) {
+        if (q1->isFull()) {
+            cout << "Stack overflow\n";
+            return;
+        }
+
+        // Enqueue new element to q2
+        q2->enqueue(data);
+
+        // Transfer all elements from q1 to q2
+        while (!q1->isEmpty()) {
+            q2->enqueue(q1->dequeue());
+        }
+
+        // Swap q1 and q2
+        Queue* temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+
+    void pop() {
+        if (q1->isEmpty()) {
+            cout << "Stack underflow\n";
+            return;
+        }
+        q1->dequeue();
+    }
+
+    int top() {
+        if (q1->isEmpty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return q1->getFront();
+    }
+
+    bool isEmpty() {
+        return q1->isEmpty();
+    }
+};
+
+int main() {
+    int capacity, choice, value;
+    
+    cout << "Enter stack capacity: ";
+    cin >> capacity;
+    StackUsingQueues stack(capacity);
+
+    do {
+        cout << "\nChoose an operation:\n";
+        cout << "1. Push\n";
+        cout << "2. Pop\n";
+        cout << "3. Top\n";
+        cout << "4. Is Empty\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to push: ";
+                cin >> value;
+                stack.push(value);
+                break;
+
+            case 2:
+                stack.pop();
+                cout << "Top element popped.\n";
+                break;
+
+            case 3:
+                cout << "Top element: " << stack.top() << endl;
+                break;
+
+            case 4:
+                if (stack.isEmpty()) {
+                    cout << "Stack is empty.\n";
+                } else {
+                    cout << "Stack is not empty.\n";
+                }
+                break;
+
+            case 5:
+                cout << "Exiting...\n";
+                break;
+
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}
