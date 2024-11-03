@@ -1,0 +1,98 @@
+//we put each expression in 2 stack then compare stack top each time and pop it out if sametill empty if both stack get empty them expressions are same.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Stack {
+    char* arr;
+    int topIndex;
+    int capacity;
+
+public:
+    Stack(int size) {
+        capacity = size;
+        arr = new char[capacity];
+        topIndex = -1;
+    }
+
+    ~Stack() {
+        delete[] arr;
+    }
+
+    bool isEmpty() {
+        return topIndex == -1;
+    }
+
+    bool isFull() {
+        return topIndex == capacity - 1;
+    }
+
+    void push(char ch) {
+        if (isFull()) {
+            cout << "Stack overflow\n";
+            return;
+        }
+        arr[++topIndex] = ch;
+    }
+
+    char pop() {
+        if (isEmpty()) {
+            cout << "Stack underflow\n";
+            return '\0'; // Returning null character as error value
+        }
+        return arr[topIndex--];
+    }
+
+    char top() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return '\0';
+        }
+        return arr[topIndex];
+    }
+};
+
+bool areExpressionsSame(const char* expr1, const char* expr2) {
+    int len1 = strlen(expr1);
+    int len2 = strlen(expr2);
+
+    // Initialize stacks for each expression
+    Stack stack1(len1);
+    Stack stack2(len2);
+
+    // Push characters of expr1 onto stack1
+    for (int i = 0; i < len1; i++) {
+        stack1.push(expr1[i]);
+    }
+
+    // Push characters of expr2 onto stack2
+    for (int i = 0; i < len2; i++) {
+        stack2.push(expr2[i]);
+    }
+
+    // Compare the stacks
+    while (!stack1.isEmpty() && !stack2.isEmpty()) {
+        // Pop and compare the top elements
+        char top1 = stack1.pop();
+        char top2 = stack2.pop();
+        if (top1 != top2) {
+            return false; // Expressions are not the same
+        }
+    }
+
+    // If both stacks are empty, expressions are identical
+    return stack1.isEmpty() && stack2.isEmpty();
+}
+
+int main() {
+    const char* expr1 = "(a+b)-(c*d)";
+    const char* expr2 = "(a+b)-(c*d)";
+
+    if (areExpressionsSame(expr1, expr2)) {
+        cout << "The expressions are the same.\n";
+    } else {
+        cout << "The expressions are different.\n";
+    }
+
+    return 0;
+}
