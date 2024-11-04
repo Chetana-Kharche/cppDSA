@@ -1,0 +1,86 @@
+#include <iostream>
+using namespace std;
+
+// Node structure for each element in the queue
+class Node {
+public:
+    int data;     // Data to store in the node
+    Node* next;   // Pointer to the next node
+
+    Node(int value) : data(value), next(nullptr) {}  // Constructor to initialize data and next
+};
+
+class Queue {
+    Node* front;  // Pointer to the front node
+    Node* rear;   // Pointer to the rear node
+
+public:
+    // Constructor initializes an empty queue
+    Queue() : front(nullptr), rear(nullptr) {}
+
+    // Enqueue: Add an element to the end of the queue
+    void enqueue(int x) {
+        Node* newNode = new Node(x);  // Create a new node with the given value
+        if (rear == nullptr) {        // Check if the queue is empty
+            front = rear = newNode;   // If empty, front and rear both point to the new node
+        } else {
+            rear->next = newNode;     // Link the new node to the end of the queue
+            rear = newNode;           // Update rear to point to the new last node
+        }
+        cout << "Enqueued: " << x << endl;  // Friendly message to confirm addition
+    }
+
+    // Dequeue: Remove an element from the front of the queue
+    void dequeue() {
+        if (front == nullptr) {   // Check if the queue is empty
+            cout << "Queue is empty. Cannot dequeue." << endl;
+        } else {
+            Node* temp = front;   // Store the current front node to delete it later
+            cout << "Dequeued: " << front->data << endl;
+            front = front->next;  // Move front to the next node
+            delete temp;          // Free the memory of the old front node
+
+            if (front == nullptr) {  // If the queue is now empty, reset rear as well
+                rear = nullptr;
+            }
+        }
+    }
+
+    // Top: Display the front element without removing it
+    void top() {
+        if (front == nullptr) {
+            cout << "Queue is empty. No front element to show." << endl;
+        } else {
+            cout << "Front element: " << front->data << endl;
+        }
+    }
+
+    // Display: Print all elements in the queue
+    void display() {
+        if (front == nullptr) {
+            cout << "Queue is empty." << endl;
+        } else {
+            cout << "Queue elements: ";
+            Node* temp = front;
+            while (temp != nullptr) {  // Traverse from front to rear
+                cout << temp->data << " ";
+                temp = temp->next;
+            }
+            cout << endl;
+        }
+    }
+
+};
+
+int main() {
+    Queue q;
+    q.enqueue(2);
+    q.enqueue(3);
+    q.enqueue(6);
+    q.enqueue(9);
+    q.top();        // Show front element
+    q.dequeue();    // Remove front element
+    q.top();        // Show new front element
+    q.display();    // Display all queue elements
+    return 0;
+}
