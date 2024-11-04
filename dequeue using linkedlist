@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+    Node(int value) : data(value), next(nullptr), prev(nullptr) {}
+};
+
+class Deque {
+    Node* front;
+    Node* rear;
+
+public:
+    Deque() : front(nullptr), rear(nullptr) {}
+
+    void addFront(int value) {
+        Node* newNode = new Node(value);
+        if (!front) {
+            front = rear = newNode;
+        } else {
+            newNode->next = front;
+            front->prev = newNode;
+            front = newNode;
+        }
+        cout << "Added to front: " << value << endl;
+    }
+
+    void addRear(int value) {
+        Node* newNode = new Node(value);
+        if (!rear) {
+            front = rear = newNode;
+        } else {
+            newNode->prev = rear;
+            rear->next = newNode;
+            rear = newNode;
+        }
+        cout << "Added to rear: " << value << endl;
+    }
+
+    void removeFront() {
+        if (!front) {
+            cout << "Deque is empty." << endl;
+            return;
+        }
+        Node* temp = front;
+        cout << "Removed from front: " << front->data << endl;
+        front = front->next;
+        if (front) {
+            front->prev = nullptr;
+        } else {
+            rear = nullptr;
+        }
+        delete temp;
+    }
+
+    void removeRear() {
+        if (!rear) {
+            cout << "Deque is empty." << endl;
+            return;
+        }
+        Node* temp = rear;
+        cout << "Removed from rear: " << rear->data << endl;
+        rear = rear->prev;
+        if (rear) {
+            rear->next = nullptr;
+        } else {
+            front = nullptr;
+        }
+        delete temp;
+    }
+
+    void display() {
+        if (!front) {
+            cout << "Deque is empty." << endl;
+            return;
+        }
+        Node* temp = front;
+        cout << "Deque elements: ";
+        while (temp) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
