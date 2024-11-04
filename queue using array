@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+    int front;
+    int rear;
+    int* arr;
+    int n;
+
+public:
+    Queue(int size = 10) {
+        n = size;
+        front = -1;
+        rear = -1;
+        arr = new int[n]; // Initialize the array with the given size
+    }
+
+    void enqueue(int x) {
+        if (rear == n - 1) {
+            cout << "Queue is full" << endl;
+        } else {
+            if (front == -1) front = 0; // Set front to 0 if queue was empty
+            rear++;
+            arr[rear] = x;
+        }
+    }
+
+    void dequeue() {
+        if (front == -1 || front > rear) {
+            cout << "Queue is empty" << endl;
+        } else {
+            cout << "Dequeued element: " << arr[front] << endl;
+            front++;
+            if (front > rear) { // Reset queue if all elements are dequeued
+                front = -1;
+                rear = -1;
+            }
+        }
+    }
+
+    void top() {
+        if (front == -1) {
+            cout << "Queue is empty" << endl;
+        } else {
+            cout << "Front element: " << arr[front] << endl;
+        }
+    }
+
+    void display() {
+        if (front == -1) {
+            cout << "Queue is empty" << endl;
+        } else {
+            cout << "Queue elements: ";
+            for (int i = front; i <= rear; i++) {
+                cout << arr[i] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    ~Queue() {
+        delete[] arr; // Free the allocated memory
+    }
+};
+
+int main() {
+    Queue q;
+    q.enqueue(2);
+    q.enqueue(3);
+    q.enqueue(6);
+    q.enqueue(9);
+    q.top();
+    q.dequeue();
+    q.top();
+    q.display();
+    return 0;
+}
