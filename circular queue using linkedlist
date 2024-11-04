@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+class CircularQueue {
+    Node* front;
+    Node* rear;
+
+public:
+    CircularQueue() : front(nullptr), rear(nullptr) {}
+
+    void enqueue(int value) {
+        Node* newNode = new Node(value);
+        if (!rear) {
+            front = rear = newNode;
+            rear->next = front;
+        } else {
+            rear->next = newNode;
+            rear = newNode;
+            rear->next = front;
+        }
+        cout << "Enqueued: " << value << endl;
+    }
+
+    void dequeue() {
+        if (!front) {
+            cout << "Circular Queue is empty." << endl;
+            return;
+        }
+        if (front == rear) {
+            cout << "Dequeued: " << front->data << endl;
+            delete front;
+            front = rear = nullptr;
+        } else {
+            Node* temp = front;
+            cout << "Dequeued: " << front->data << endl;
+            front = front->next;
+            rear->next = front;
+            delete temp;
+        }
+    }
+
+    void display() {
+        if (!front) {
+            cout << "Circular Queue is empty." << endl;
+            return;
+        }
+        Node* temp = front;
+        cout << "Circular Queue elements: ";
+        do {
+            cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != front);
+        cout << endl;
+    }
+};
